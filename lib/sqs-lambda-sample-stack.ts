@@ -11,14 +11,16 @@ export class SqsLambdaSampleStack extends cdk.Stack {
 
 
 
-    const queue1 = new sqs.Queue(this, 'SqsLambdaQueue', {
-      visibilityTimeout: cdk.Duration.seconds(300),
-      retentionPeriod: cdk.Duration.minutes(5),
-      queueName: 'sqs-sample-queue'
-    });
     const dl_queue1 = new sqs.Queue(this, 'dl_SqsLambdaQueue', {
       visibilityTimeout: cdk.Duration.seconds(300),
       queueName: 'dl_sqs-sample-queue'
+    });
+   
+    const queue1 = new sqs.Queue(this, 'SqsLambdaQueue', {
+      visibilityTimeout: cdk.Duration.seconds(300),
+      retentionPeriod: cdk.Duration.minutes(5),
+      queueName: 'sqs-sample-queue',
+      deadLetterQueue :{queue: dl_queue1 , maxReceiveCount: 500}
     });
 
 
@@ -36,7 +38,7 @@ export class SqsLambdaSampleStack extends cdk.Stack {
 
     const func_sendLambda_Role = func_sendLambda.role as iam.Role;
     func_sendLambda_Role.addManagedPolicy(
-      iam.ManagedPolicy.fromAwsManagedPolicyName("AmazonSQSFull")
+      iam.ManagedPolicy.fromAwsManagedPolicyName("AmazonSQSFullAccess")
     )
 
     //------------------------------
