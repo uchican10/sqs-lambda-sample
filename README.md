@@ -1,14 +1,10 @@
-# Welcome to your CDK TypeScript project
+# SQS ＋ Lambda のCDKサンプル
 
-This is a blank project for CDK development with TypeScript.
+## 作成するもの
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
+- Queue
+- DeadLeterQueue
+- Queueにメッセージを入れるlambda関数
+- Queueに入ったメッセージを処理するLambda関数
+- SQSトリガーによるLambda連携でメッセージを処理するLambda関数
 
-## Useful commands
-
-* `npm run build`   compile typescript to js
-* `npm run watch`   watch for changes and compile
-* `npm run test`    perform the jest unit tests
-* `npx cdk deploy`  deploy this stack to your default AWS account/region
-* `npx cdk diff`    compare deployed stack with current state
-* `npx cdk synth`   emits the synthesized CloudFormation template
