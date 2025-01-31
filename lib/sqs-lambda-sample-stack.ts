@@ -36,7 +36,7 @@ export class SqsLambdaSampleStack extends cdk.Stack {
 
     const func_sendLambda_Role = func_sendLambda.role as iam.Role;
     func_sendLambda_Role.addManagedPolicy(
-      iam.ManagedPolicy.fromAwsManagedPolicyName("AmazonSQSFull")
+      iam.ManagedPolicy.fromAwsManagedPolicyName("AmazonSQSFullAccess")
     )
 
     //------------------------------
