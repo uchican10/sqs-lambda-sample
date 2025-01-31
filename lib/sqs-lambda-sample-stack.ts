@@ -12,15 +12,14 @@ export class SqsLambdaSampleStack extends cdk.Stack {
 
 
     const dl_queue1 = new sqs.Queue(this, 'dl_SqsLambdaQueue', {
-      visibilityTimeout: cdk.Duration.seconds(300),
       queueName: 'dl_sqs-sample-queue'
     });
    
     const queue1 = new sqs.Queue(this, 'SqsLambdaQueue', {
-      visibilityTimeout: cdk.Duration.seconds(300),
-      retentionPeriod: cdk.Duration.minutes(5),
+      visibilityTimeout: cdk.Duration.seconds(35),
+      retentionPeriod: cdk.Duration.minutes(2),
       queueName: 'sqs-sample-queue',
-      deadLetterQueue :{queue: dl_queue1 , maxReceiveCount: 500}
+      deadLetterQueue :{queue: dl_queue1 , maxReceiveCount: 2}
     });
 
 
@@ -69,10 +68,11 @@ export class SqsLambdaSampleStack extends cdk.Stack {
       runtime: lambda.Runtime.NODEJS_22_X,
       handler: 'index.handler',
       code: lambda.Code.fromAsset('lambda/sqstriggerrecv'),
-      timeout: cdk.Duration.seconds(10),
+      timeout: cdk.Duration.seconds(1),
       functionName: 'sqsTrigerRecvLambda',
       environment: {
         'QUEUE_URL': queue1.queueUrl,
+        'SLEEP_TIME': '3000',
       }
     });
 
@@ -88,7 +88,9 @@ export class SqsLambdaSampleStack extends cdk.Stack {
     )
 
     // lambdaのトリガーにSQSイベントを割り付ける
-    func_trigger_recvLambda.addEventSource(new eventsources.SqsEventSource(queue1))
+    func_trigger_recvLambda.addEventSource(
+      new eventsources.SqsEventSource(queue1,{batchSize:1,maxConcurrency:2})
+    )
 
 
   }
